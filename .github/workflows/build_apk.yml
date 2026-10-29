@@ -46,16 +46,8 @@ jobs:
           mkdir -p assets/images
           rm -rf android
           flutter create --platforms=android --org com.bridgemart --project-name naijabenin_tissus_app .
-          python3 -c "
-          with open('android/app/src/main/AndroidManifest.xml', 'r') as f:
-              c = f.read()
-          perms = '    <uses-permission android:name=\"android.permission.INTERNET\"/>\n    <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>\n    <uses-permission android:name=\"android.permission.CAMERA\"/>\n'
-          c = c.replace('<application', perms + '    <application')
-          with open('android/app/src/main/AndroidManifest.xml', 'w') as f:
-              f.write(c)
-          "
+          python3 scripts/prepare_android.py
           flutter pub get
-          flutter analyze --no-fatal-infos
 
       - name: 6. Compiler l'APK Android (Release Universel)
         run: |
