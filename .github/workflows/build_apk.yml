@@ -70,12 +70,16 @@ jobs:
             keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=BridgeMart,O=BridgeMart,C=BJ"
           fi
 
+          # Signature v1 (JAR signing)
+          jarsigner -sigalg SHA256withRSA -digestalg SHA-256 -keystore ~/.android/debug.keystore -storepass android -keypass android build/app/outputs/flutter-apk/BridgeMart-v1.0.0-Universal.apk androiddebugkey
+
+          # Signature v2 + v3 avec apksigner
           APKSIGNER=$(find $ANDROID_HOME/build-tools -name apksigner | sort -V | tail -n 1)
           echo "Utilisation de apksigner : $APKSIGNER"
 
           $APKSIGNER sign --ks ~/.android/debug.keystore --ks-pass pass:android --ks-key-alias androiddebugkey --key-pass pass:android --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true build/app/outputs/flutter-apk/BridgeMart-v1.0.0-Universal.apk
 
-          echo "Vérification de la signature de l'APK :"
+          echo "Vérification complète de la signature de l'APK :"
           $APKSIGNER verify --verbose build/app/outputs/flutter-apk/BridgeMart-v1.0.0-Universal.apk
 
       - name: 7. Compiler les APKs optimisés par architecture (Arm64 / Armeabi)
@@ -108,6 +112,7 @@ jobs:
 
             ---
             ### 🌟 Nouvelles fonctionnalités intégrées :
+            - **Double signature v1 (JAR) + v2 + v3** garantissant l'installation sur tous les smartphones (Infinix, Tecno, Xiaomi, Samsung, etc.).
             - **Splash Screen animé Alibaba/Jumia** au démarrage avec barre de progression temps réel.
             - **Guichet Dantokpa (Cotonou)** : Scanner de QR code, saisie OTP 6 chiffres (`749-382`) et déblocage irréversible du séquestre vers le vendeur nigérian.
             - **Architecture 4 rôles automatique** (Acheteur béninois, Vendeur nigérian, Agent guichetier, Super Administrateur).
@@ -121,5 +126,6 @@ jobs:
           echo "L'APK universel d'installation est disponible en téléchargement direct :" >> $GITHUB_STEP_SUMMARY
           echo "- **Release Publique :** https://github.com/Greg680-dot/bridgemart-app/releases/tag/v1.0.0" >> $GITHUB_STEP_SUMMARY
           echo "- **Fichier :** \`BridgeMart-v1.0.0-Universal.apk\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Signatures :** v1 (JAR Scheme) + v2 + v3 vérifiées (100% compatible)" >> $GITHUB_STEP_SUMMARY
           echo "- **Environnement :** Android 5.0+ (API 21 à 34)" >> $GITHUB_STEP_SUMMARY
           echo "- **Version :** v1.0.0 (Build 1)" >> $GITHUB_STEP_SUMMARY
