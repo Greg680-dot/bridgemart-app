@@ -70,14 +70,11 @@ jobs:
             keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=BridgeMart,O=BridgeMart,C=BJ"
           fi
 
-          # Signature v1 (JAR signing)
-          jarsigner -sigalg SHA256withRSA -digestalg SHA-256 -keystore ~/.android/debug.keystore -storepass android -keypass android build/app/outputs/flutter-apk/BridgeMart-v1.0.0-Universal.apk androiddebugkey
-
-          # Signature v2 + v3 avec apksigner
+          # Signature universelle v1 (JAR) + v2 + v3 avec apksigner
           APKSIGNER=$(find $ANDROID_HOME/build-tools -name apksigner | sort -V | tail -n 1)
           echo "Utilisation de apksigner : $APKSIGNER"
 
-          $APKSIGNER sign --ks ~/.android/debug.keystore --ks-pass pass:android --ks-key-alias androiddebugkey --key-pass pass:android --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true build/app/outputs/flutter-apk/BridgeMart-v1.0.0-Universal.apk
+          $APKSIGNER sign --ks ~/.android/debug.keystore --ks-pass pass:android --ks-key-alias androiddebugkey --key-pass pass:android --min-sdk-version 21 --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true build/app/outputs/flutter-apk/BridgeMart-v1.0.0-Universal.apk
 
           echo "Vérification complète de la signature de l'APK :"
           $APKSIGNER verify --verbose build/app/outputs/flutter-apk/BridgeMart-v1.0.0-Universal.apk
