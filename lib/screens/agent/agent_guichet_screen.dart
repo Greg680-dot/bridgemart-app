@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../config/theme.dart';
+import '../../services/auth_service.dart';
+import '../home/main_navigation_screen.dart';
+import '../seller/seller_dashboard_screen.dart';
+import '../admin/super_admin_dashboard_screen.dart';
 
 class AgentGuichetScreen extends StatefulWidget {
   const AgentGuichetScreen({Key? key}) : super(key: key);
@@ -224,6 +229,11 @@ class _AgentGuichetScreenState extends State<AgentGuichetScreen> {
           ],
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.swap_horiz, color: Colors.white),
+            tooltip: 'Changer d\'espace rôle',
+            onPressed: () => _showRoleSwitchSheet(context, Provider.of<AuthService>(context, listen: false)),
+          ),
           IconButton(
             icon: const Icon(Icons.qr_code_scanner),
             onPressed: () {
@@ -547,6 +557,56 @@ class _AgentGuichetScreenState extends State<AgentGuichetScreen> {
             Text(label, style: const TextStyle(fontSize: 9, color: AppTheme.textMuted, fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
             Text(value, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: color)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showRoleSwitchSheet(BuildContext context, AuthService auth) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Changer d\'Espace Utilisateur', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            ListTile(
+              leading: const CircleAvatar(backgroundColor: AppTheme.primary, child: Icon(Icons.shopping_bag, color: Colors.white)),
+              title: const Text('Acheteur Béninois (Amina Dossou)'),
+              subtitle: const Text('Catalogue & Commandes Dantokpa'),
+              onTap: () {
+                Navigator.pop(ctx);
+                auth.switchRole('buyer');
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const MainNavigationScreen()), (r) => false);
+              },
+            ),
+            ListTile(
+              leading: const CircleAvatar(backgroundColor: AppTheme.nigeriaGreen, child: Icon(Icons.storefront, color: Colors.white)),
+              title: const Text('Vendeur Nigérian (Mama Folake)'),
+              subtitle: const Text('Gestion boutique & Virements NGN'),
+              onTap: () {
+                Navigator.pop(ctx);
+                auth.switchRole('seller');
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const SellerDashboardScreen()));
+              },
+            ),
+            ListTile(
+              leading: const CircleAvatar(backgroundColor: Color(0xFF1A1F36), child: Icon(Icons.admin_panel_settings, color: Colors.white)),
+              title: const Text('Super Administrateur BridgeMart'),
+              subtitle: const Text('Validation boutiques & Arbitrage'),
+              onTap: () {
+                Navigator.pop(ctx);
+                auth.switchRole('admin');
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const SuperAdminDashboardScreen()));
+              },
+            ),
           ],
         ),
       ),

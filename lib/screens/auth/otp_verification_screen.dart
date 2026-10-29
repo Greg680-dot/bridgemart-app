@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import '../../config/theme.dart';
 import '../../services/auth_service.dart';
 import '../home/main_navigation_screen.dart';
+import '../seller/seller_dashboard_screen.dart';
+import '../agent/agent_guichet_screen.dart';
+import '../admin/super_admin_dashboard_screen.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String phone;
@@ -25,9 +28,20 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     if (mounted) {
       setState(() => _isSubmitting = false);
       if (success) {
+        Widget targetScreen;
+        if (auth.currentRole == 'seller') {
+          targetScreen = const SellerDashboardScreen();
+        } else if (auth.currentRole == 'agent_relais') {
+          targetScreen = const AgentGuichetScreen();
+        } else if (auth.currentRole == 'admin') {
+          targetScreen = const SuperAdminDashboardScreen();
+        } else {
+          targetScreen = const MainNavigationScreen();
+        }
+
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+          MaterialPageRoute(builder: (context) => targetScreen),
           (route) => false,
         );
       }
@@ -59,7 +73,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Entrez le code à 6 chiffres envoyé au ${widget.phone}',
+              'Saisissez le code OTP à 6 chiffres envoyé au ${widget.phone}',
               textAlign: TextAlign.center,
               style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13),
             ),
@@ -69,10 +83,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
               maxLength: 6,
-              style: const TextStyle(fontSize: 24, letterSpacing: 8, fontWeight: FontWeight.bold),
-              decoration: const InputDecoration(
-                hintText: '000000',
+              style: const TextStyle(fontSize: 26, letterSpacing: 8, fontWeight: FontWeight.bold),
+              decoration: InputDecoration(
                 counterText: '',
+                hintText: '123456',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
             const SizedBox(height: 24),
@@ -82,19 +97,26 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               child: ElevatedButton(
                 onPressed: _isSubmitting ? null : _verify,
                 child: _isSubmitting
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('Valider et Continuer', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                      )
+                    : const Text('Valider et Accéder', style: TextStyle(fontSize: 16)),
               ),
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Nouveau code envoyé par SMS (Simulé : 123456)')),
+                );
+              },
+              child: const Text('Renvoyer le code par SMS', style: TextStyle(color: AppTheme.primary)),
             ),
           ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _otpController.dispose();
-    super.dispose();
   }
 }

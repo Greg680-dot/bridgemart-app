@@ -1,8 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../config/theme.dart';
+import '../../services/auth_service.dart';
 import '../../widgets/bridgemart_logo.dart';
 import '../home/main_navigation_screen.dart';
+import '../seller/seller_dashboard_screen.dart';
+import '../agent/agent_guichet_screen.dart';
+import '../admin/super_admin_dashboard_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -65,13 +70,25 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       }
     });
 
-    // Redirection fluide vers l'application principale
+    // Redirection automatique selon le rôle de l'utilisateur connecté
     Timer(const Duration(milliseconds: 2500), () {
       if (mounted) {
+        final auth = Provider.of<AuthService>(context, listen: false);
+        Widget targetScreen;
+        if (auth.currentRole == 'seller') {
+          targetScreen = const SellerDashboardScreen();
+        } else if (auth.currentRole == 'agent_relais') {
+          targetScreen = const AgentGuichetScreen();
+        } else if (auth.currentRole == 'admin') {
+          targetScreen = const SuperAdminDashboardScreen();
+        } else {
+          targetScreen = const MainNavigationScreen();
+        }
+
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
-            pageBuilder: (_, __, ___) => const MainNavigationScreen(),
+            pageBuilder: (_, __, ___) => targetScreen,
             transitionDuration: const Duration(milliseconds: 600),
             transitionsBuilder: (_, animation, __, child) {
               return FadeTransition(opacity: animation, child: child);
@@ -209,7 +226,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             right: 32,
             child: Column(
               children: [
-                // Barre de chargement fluide
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: SizedBox(
