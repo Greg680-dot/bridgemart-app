@@ -64,6 +64,20 @@ jobs:
           fi
           cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/BridgeMart-v1.0.0-Universal.apk
 
+          echo "--- Double Signature v1 (JAR) + v2 + v3 pour Compatibilité Universelle Android ---"
+          mkdir -p ~/.android
+          if [ ! -f ~/.android/debug.keystore ]; then
+            keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=BridgeMart,O=BridgeMart,C=BJ"
+          fi
+
+          APKSIGNER=$(find $ANDROID_HOME/build-tools -name apksigner | sort -V | tail -n 1)
+          echo "Utilisation de apksigner : $APKSIGNER"
+
+          $APKSIGNER sign --ks ~/.android/debug.keystore --ks-pass pass:android --ks-key-alias androiddebugkey --key-pass pass:android --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true build/app/outputs/flutter-apk/BridgeMart-v1.0.0-Universal.apk
+
+          echo "Vérification de la signature de l'APK :"
+          $APKSIGNER verify --verbose build/app/outputs/flutter-apk/BridgeMart-v1.0.0-Universal.apk
+
       - name: 7. Compiler les APKs optimisés par architecture (Arm64 / Armeabi)
         if: "${{ github.event.inputs.build_type == 'split-per-abi' }}"
         run: flutter build apk --release --split-per-abi --no-tree-shake-icons
