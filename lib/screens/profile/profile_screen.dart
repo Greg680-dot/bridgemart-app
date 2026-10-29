@@ -298,7 +298,7 @@ class ProfileScreen extends StatelessWidget {
               title: const Text('Assistance Acheteurs & Arbitrage', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
               subtitle: const Text('WhatsApp Bénin : +229 97 00 11 22 (8h - 20h)', style: TextStyle(fontSize: 11)),
               trailing: const Icon(Icons.chevron_right),
-              onPressed: () {
+              onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Ouverture du support WhatsApp NaijaBénin...')),
                 );
