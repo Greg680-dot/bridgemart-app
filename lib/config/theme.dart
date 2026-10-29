@@ -15,6 +15,7 @@ class AppTheme {
 
   // Aliases for compatibility
   static const Color primary = bridgeGreen;
+  static const Color primaryLight = greenTint;
   static const Color secondary = deepGreen;
   static const Color accent = marketYellow;
   static const Color error = signalRed;
@@ -23,6 +24,12 @@ class AppTheme {
   static const Color textPrimary = ink;
   static const Color textMuted = textSecondary;
   static const Color cardColor = Colors.white;
+
+  // Regional & Country branding
+  static const Color nigeriaGreen = bridgeGreen;
+  static const Color beninGreen = deepGreen;
+  static const Color beninYellow = marketYellow;
+  static const Color beninRed = signalRed;
 
   static ThemeData get lightTheme {
     return ThemeData(
