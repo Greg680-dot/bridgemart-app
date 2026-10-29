@@ -120,6 +120,75 @@ html_content = '''<!DOCTYPE html>
       background: #000;
       border-radius: 0 0 12px 12px;
     }
+
+    /* ============================================================ */
+    /* SPLASH SCREEN DE DEMARRAGE (STYLE ALIBABA / E-COMMERCE)      */
+    /* ============================================================ */
+    #app-splash-screen {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 50% 32%, #0E291C, #06120B);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    #app-splash-screen.fade-out {
+      opacity: 0;
+      transform: scale(1.06);
+      pointer-events: none;
+    }
+    .splash-glow {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 135, 81, 0.38) 0%, rgba(252, 209, 22, 0.12) 50%, transparent 72%);
+      filter: blur(24px);
+      animation: pulseGlow 3.5s infinite alternate ease-in-out;
+    }
+    @keyframes pulseGlow {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      100% { transform: scale(1.18); opacity: 1; }
+    }
+    .splash-logo-box {
+      width: 88px;
+      height: 88px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      border-radius: 26px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      box-shadow: 0 16px 40px rgba(0, 135, 81, 0.35);
+      animation: splashLogoIn 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes splashLogoIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .splash-progress-track {
+      width: 200px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 26px;
+      position: relative;
+    }
+    .splash-progress-bar {
+      width: 15%;
+      height: 100%;
+      background: linear-gradient(90deg, #FCD116, #008751);
+      border-radius: 10px;
+      transition: width 0.4s ease;
+      box-shadow: 0 0 8px rgba(252, 209, 22, 0.6);
+    }
+
     /* App Header */
     .app-header {
       background: #fff;
@@ -770,6 +839,50 @@ html_content = '''<!DOCTYPE html>
       </div>
     </div>
 
+    <!-- ============================================================ -->
+    <!-- SPLASH SCREEN DE CHARGEMENT AU DEMARRAGE (STYLE ALIBABA)     -->
+    <!-- ============================================================ -->
+    <div id="app-splash-screen">
+      <div class="splash-glow"></div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; z-index:2; text-align:center; padding:0 24px;">
+        <!-- Logo animé avec éclat -->
+        <div class="splash-logo-box">
+          <div class="logo-mark" style="width:56px; height:56px; border-radius:18px;">
+            <div class="diamond" style="top:9px; width:9px; height:9px;"></div>
+            <div class="arch" style="top:19px; width:34px; height:20px; border-width:5px;"></div>
+            <div class="base-road" style="bottom:13px; width:38px; height:6px;"></div>
+          </div>
+        </div>
+
+        <div style="font-size:30px; font-weight:900; color:#fff; letter-spacing:-0.5px; margin-top:20px;">
+          Bridge<span style="color:var(--market-yellow);">Mart</span>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.16); padding:5px 14px; border-radius:20px; font-size:10px; font-weight:800; color:#FCD116; letter-spacing:1px; margin-top:8px;">
+          BENIN 🇧🇯 · NIGERIA 🇳🇬 MARKETPLACE
+        </div>
+
+        <div style="font-size:11px; color:rgba(255,255,255,0.7); margin-top:10px; font-weight:500;">
+          Tissus d'exception · Séquestre Garanti · Virement Naira
+        </div>
+
+        <!-- Barre de chargement style Alibaba -->
+        <div class="splash-progress-track">
+          <div class="splash-progress-bar" id="splash-progress"></div>
+        </div>
+
+        <!-- Message d'initialisation dynamique -->
+        <div style="font-size:11px; color:rgba(255,255,255,0.85); font-weight:600; margin-top:12px; min-height:18px;" id="splash-status-text">
+          Connexion sécurisée à la Marketplace...
+        </div>
+
+        <div style="font-size:8px; color:rgba(255,255,255,0.35); margin-top:30px; letter-spacing:0.8px;">
+          POWERED BY KKIAPAY & PAYSTACK AFRICA
+        </div>
+      </div>
+    </div>
+
     <!-- ========================================== -->
     <!-- ROLE 1: ACHETEUR BÉNIN                      -->
     <!-- ========================================== -->
@@ -1025,6 +1138,19 @@ html_content = '''<!DOCTYPE html>
                     </button>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <!-- Rejouer l'animation de démarrage -->
+            <div class="card-box" style="margin:0 0 14px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <div style="font-size:12px; font-weight:800;"><i class="fas fa-play-circle" style="color:var(--primary);"></i> Écran de Démarrage</div>
+                  <div style="font-size:10px; color:var(--text-muted);">Revoir l'animation de lancement style Alibaba</div>
+                </div>
+                <button class="btn-action-sm btn-green" onclick="replaySplashScreen()">
+                  <i class="fas fa-redo"></i> Rejouer
+                </button>
               </div>
             </div>
 
@@ -1826,6 +1952,43 @@ html_content = '''<!DOCTYPE html>
     { title: 'Colis retiré & Fonds libérés', desc: 'Code validé. Virement en Nairas versé au vendeur nigérian.' }
   ];
 
+  // ============================================================
+  // ANIMATION DE CHARGEMENT AU DEMARRAGE (STYLE ALIBABA)
+  // ============================================================
+  function startSplashAnimation() {
+    const splash = document.getElementById('app-splash-screen');
+    const bar = document.getElementById('splash-progress');
+    const txt = document.getElementById('splash-status-text');
+    if (!splash || !bar || !txt) return;
+
+    splash.classList.remove('fade-out');
+    bar.style.width = '15%';
+    txt.innerText = 'Connexion à la Marketplace de tissus...';
+
+    setTimeout(() => {
+      bar.style.width = '45%';
+      txt.innerText = 'Actualisation des cours de change (1 XOF = 2.43 NGN)...';
+    }, 450);
+
+    setTimeout(() => {
+      bar.style.width = '80%';
+      txt.innerText = 'Chargement des tissus Balogun & Dantokpa...';
+    }, 1000);
+
+    setTimeout(() => {
+      bar.style.width = '100%';
+      txt.innerText = 'Séquestre actif. Prêt !';
+    }, 1600);
+
+    setTimeout(() => {
+      splash.classList.add('fade-out');
+    }, 2050);
+  }
+
+  function replaySplashScreen() {
+    startSplashAnimation();
+  }
+
   // Supabase Client instance (dynamique)
   let supabaseClient = null;
 
@@ -2468,6 +2631,7 @@ html_content = '''<!DOCTYPE html>
   }
 
   // Initialisation au chargement
+  startSplashAnimation();
   renderProducts(products);
   updateCartUI();
   updateTransferQuote();

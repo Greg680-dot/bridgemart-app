@@ -6,6 +6,7 @@ import 'services/currency_service.dart';
 import 'services/marketplace_service.dart';
 import 'services/escrow_order_service.dart';
 import 'screens/home/main_navigation_screen.dart';
+import 'screens/splash/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,7 @@ class NaijaBeninTissusApp extends StatelessWidget {
         title: 'BridgeMart',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
-        home: const MainNavigationScreen(),
+        home: const SplashScreen(),
       ),
     );
   }
