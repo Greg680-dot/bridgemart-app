@@ -37,13 +37,14 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
 
       - name: 4. Vérifier l'environnement Flutter
         run: flutter doctor -v
 
-      - name: 5. Récupérer les dépendances Flutter
-        run: flutter pub get
+      - name: 5. Préparer l'environnement Android & Dépendances
+        run: |
+          flutter create --platforms=android --org com.bridgemart .
+          flutter pub get
 
       - name: 6. Compiler l'APK Android (Release Universel)
         run: |
