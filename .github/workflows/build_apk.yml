@@ -43,7 +43,11 @@ jobs:
 
       - name: 5. Préparer l'environnement Android & Dépendances
         run: |
-          flutter create --platforms=android --org com.bridgemart .
+          mkdir -p assets/images
+          rm -rf android
+          flutter create --platforms=android --org com.bridgemart --project-name naijabenin_tissus_app .
+          sed -i '/<application/i \    <uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>\n    <uses-permission android:name="android.permission.CAMERA"/>' android/app/src/main/AndroidManifest.xml
+          sed -i 's/android:label="naijabenin_tissus_app"/android:label="BridgeMart"/' android/app/src/main/AndroidManifest.xml
           flutter pub get
 
       - name: 6. Compiler l'APK Android (Release Universel)
