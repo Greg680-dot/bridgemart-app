@@ -51,7 +51,14 @@ jobs:
 
       - name: 6. Compiler l'APK Android (Release Universel)
         run: |
-          flutter build apk --release --no-tree-shake-icons
+          set -o pipefail
+          if ! flutter build apk --release --no-tree-shake-icons 2>&1 | tee build_log.txt; then
+            echo "### ❌ Erreur lors de la compilation de l'APK :" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            tail -n 120 build_log.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
           cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/BridgeMart-v1.0.0-Universal.apk
 
       - name: 7. Compiler les APKs optimisés par architecture (Arm64 / Armeabi)
